@@ -29,7 +29,7 @@ typedef struct
 
 } artikel_type;
 
-artikel_type artikel[] = {
+const artikel_type artikel[] = {
     {
         .name = "sonstiges",
         .uid = 503220
