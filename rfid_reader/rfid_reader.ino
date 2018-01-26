@@ -84,6 +84,7 @@ void setup()
 
     mySerial.begin(19200);
     printer.begin();
+    printer.setSize('M');
     delay(3000);
     printer.sleep();
 
@@ -130,11 +131,11 @@ void loop()
         if (artikel[i].uid == code)
         {
             //Serial.println(artikel[i].name);//DEBUG
-            lcd.clear();
+            /*lcd.clear();
             lcd.setCursor(0,0);
             lcd.print(artikel[i].name);
             lcd.setCursor(0,1);
-            lcd.print("Einkaufen");
+            lcd.print("Einkaufen");*/
 
             if (artikel[i].uid == uidtemp)
             {
@@ -144,6 +145,7 @@ void loop()
 
             printer.wake();
             //Serial.println(artikel[i].name);//DEBUG
+            
             printer.println(artikel[i].name);
             uidtemp = artikel[i].uid;
             delay(1000);
