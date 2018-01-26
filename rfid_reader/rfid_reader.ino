@@ -15,6 +15,8 @@
 #define SS_PIN 10
 #define RST_PIN 9
 
+#define PRINTER_BAUD 19200
+
 //SoftwareSerial RFID(2, 3);                // PIN2 125 KHZ
 MFRC522 mfrc522(SS_PIN, RST_PIN);
 LiquidCrystal_I2C lcd(0x27, 16, 2);         // 16 zeichen 2 zeilen
@@ -29,6 +31,7 @@ typedef struct
 
 } artikel_type;
 
+// don't forget to update the loop counter when changing the number of array elements[1]
 const artikel_type artikel[] = {
     {
         .name = "sonstiges",
@@ -74,17 +77,20 @@ const artikel_type artikel[] = {
         .name = "Sirup",
         .uid = 2012310
     }
-}
+};
 
+long uidtemp = 0;
 
 void setup()
 {
     //RFID.begin(9600);    //125 KHZ
-    Serial.begin(9600); // DEBUG
+    //Serial.begin(9600); // DEBUG
 
-    mySerial.begin(19200);
+    mySerial.begin(PRINTER_BAUD);
     printer.begin();
     printer.setSize('M');
+    printer.setLineHeight(70);
+    printer.println("");
     delay(3000);
     printer.sleep();
 
@@ -96,8 +102,6 @@ void setup()
 
 void loop()
 {
-    long uidtemp = 0;
-
     /*if (RFID.available() > 0) //125 KHZ
       {
          i = RFID.read();
@@ -126,7 +130,7 @@ void loop()
     //Serial.print("Die Kartennummer lautet:");//DEBUG
     //Serial.println(code);
 
-    for (int i = 0; i < 30; ++i)
+    for (int i = 0; i < 30; ++i)//Change here [1]
     {
         if (artikel[i].uid == code)
         {
@@ -140,7 +144,7 @@ void loop()
             if (artikel[i].uid == uidtemp)
             {
                 //Serial.println("break");
-                break;
+                return;
             }
 
             printer.wake();
@@ -150,8 +154,6 @@ void loop()
             uidtemp = artikel[i].uid;
             delay(1000);
             printer.sleep();
-
-            break;
         }
     }
 }
